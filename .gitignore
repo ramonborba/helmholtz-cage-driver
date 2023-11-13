@@ -1,3 +1,10 @@
+# VS Code
+.vscode
+
+# Build Folders
+build/
+
+# Template .gitignore for C++
 # Prerequisites
 *.d
 
