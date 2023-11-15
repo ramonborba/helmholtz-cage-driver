@@ -13,9 +13,9 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-#include "tasks_api.hpp"
+#include "Application.hpp"
 
 extern "C" void app_main(void)
 {
-    createTasks();
+    Application::start();
 }

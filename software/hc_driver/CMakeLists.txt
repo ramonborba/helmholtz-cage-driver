@@ -4,9 +4,9 @@
 # CMakeLists in this exact order for cmake to work correctly
 cmake_minimum_required(VERSION 3.16)
 
-set(EXTRA_COMPONENT_DIRS tasks)
+set(EXTRA_COMPONENT_DIRS app tasks)
 
-set(COMPONENTS main tasks_api heartbeat)
+set(COMPONENTS main Application)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 project(hc_driver)
