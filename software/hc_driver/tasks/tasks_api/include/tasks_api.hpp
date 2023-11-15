@@ -14,4 +14,4 @@
  * \brief Creates all applicaion tasks
  * 
  */
-void create_tasks(void);
+void createTasks(void);
