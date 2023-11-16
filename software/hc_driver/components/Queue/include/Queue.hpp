@@ -16,30 +16,31 @@
 
 #include "esp_err.h"
 
-template <typename T>
-struct Node
-{
-    Node<T>* pNext { nullptr };
-    T data;
-    Node() = default;
-    Node(T t_Val) : data (t_Val) {}
-};
-
 template<typename T>
 class Queue
 {
-private:
-    Node<T>* m_pStart;
-    Node<T>* m_pEnd;
 public:
     Queue();
     ~Queue();
     
-    esp_err_t Enqueue(Node<T> t_Node);
+    esp_err_t Enqueue(T t_Data);
 
-    Node<T> Dequeue();
+    T Dequeue();
 
     bool IsEmpty();
+
+private:
+    template<typename U>
+    struct Node
+    {
+        Node<U>* pNext;
+        U data;
+        Node() : pNext ( nullptr ) {};
+        Node(U t_Val) : data (t_Val) {}
+    };
+
+    Node<T>* m_pStart;
+    Node<T>* m_pEnd;
 };
 
 #include "../Queue.cpp"

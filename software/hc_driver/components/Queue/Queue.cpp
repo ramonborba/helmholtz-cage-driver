@@ -31,12 +31,12 @@ Queue<T>::~Queue()
 }
 
 template<typename T>
-esp_err_t Queue<T>::Enqueue(Node<T> t_Node) {
-    Node<T>* auxNode = new Node<T>();
+esp_err_t Queue<T>::Enqueue(T t_Data) {
+    Node<T>* auxNode = new Node<T>(t_Data);
     if (auxNode == nullptr) {
         return ESP_ERR_NO_MEM;
     }
-    *auxNode = t_Node;
+    *auxNode = t_Data;
     if (m_pStart == nullptr) {
         m_pStart = auxNode;
         m_pEnd = m_pStart;
@@ -50,12 +50,12 @@ esp_err_t Queue<T>::Enqueue(Node<T> t_Node) {
 }
 
 template<typename T>
-Node<T> Queue<T>::Dequeue() {
-    Node<T> auxNode = *m_pStart;
+T Queue<T>::Dequeue() {
+    T data = m_pStart->data;
     Node<T>* auxPtr = m_pStart;
     m_pStart = m_pStart->pNext;
     delete auxPtr;
-    return auxNode;
+    return data;
 }
 
 template<typename T>
