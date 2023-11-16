@@ -20,18 +20,18 @@
 #include "Application.hpp"
 #include "application_tasks.hpp"
 
-static const char* TAG = "Application";
+static const char* TAG = "Application Class";
 
 
-void Application::start() {
+void Application::Start() {
     ESP_LOGI(TAG, "Stating application.");
 
-    Application::GetInstance().createTasks();
+    Application::GetInstance().xCreateTasks();
 }
 
 void Application::Heartbeat() {
 
-    idf::GPIO_Output Heartbeat_LED(idf::GPIONum(HEARTBEAT_LED_PIN));
+    idf::GPIO_Output ledHeartbeat (idf::GPIONum(HEARTBEAT_LED_PIN));
     bool active = false;
 
     while (true)
@@ -39,11 +39,11 @@ void Application::Heartbeat() {
         TickType_t lastWakeTime = xTaskGetTickCount();
         if (active)
         {
-            Heartbeat_LED.set_high();
+            ledHeartbeat.set_high();
         }
         else
         {
-            Heartbeat_LED.set_low();
+            ledHeartbeat.set_low();
         }
         active = !active;
 
@@ -56,18 +56,18 @@ Application& Application::GetInstance() {
     return m_Singleton;
 }
 
-void Application::createTasks() {
+void Application::xCreateTasks() {
 
     BaseType_t err;
 
     ESP_LOGI(TAG, "Creating tasks.");
     // Create testing task
-    err = xTaskCreatePinnedToCore(taskTesting,
+    err = xTaskCreatePinnedToCore(TestingTask,
                             TASK_TESTING_TASK_NAME,
                             TASK_TESTING_TASK_STACK_SIZE,
                             nullptr,
                             TASK_TESTING_TASK_PRIORITY,
-                            &taskTestingHandle,
+                            &tskTestingTaskHandle,
                             tskNO_AFFINITY
                             );
     if (err != pdPASS) {

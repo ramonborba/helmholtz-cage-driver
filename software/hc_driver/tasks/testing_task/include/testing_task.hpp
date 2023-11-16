@@ -25,13 +25,13 @@
 #define TASK_TESTING_TASK_INIT_TIMEOUT_MS      2000
 
 
-extern TaskHandle_t taskTestingHandle;
+extern TaskHandle_t tskTestingTaskHandle;
 
 /**
  * \brief Testing task
  * 
  * \param pvParameters Not used
  */
-void taskTesting(void *pvParameters);
+void TestingTask(void *pvParameters);
 
 #endif  /* _TESTING_TASK_HPP_ */

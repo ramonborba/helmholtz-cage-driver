@@ -18,7 +18,7 @@
 class Application
 {
 public:
-    static void start();
+    static void Start();
 
     static void Heartbeat();
 
@@ -29,7 +29,7 @@ private:
 
     static Application& GetInstance();
 
-    void createTasks();
+    void xCreateTasks();
 
     static Application m_Singleton;
 };

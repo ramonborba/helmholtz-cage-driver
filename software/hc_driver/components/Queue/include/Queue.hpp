@@ -19,27 +19,27 @@
 template <typename T>
 struct Node
 {
-    Node<T>* next { nullptr };
+    Node<T>* pNext { nullptr };
     T data;
     Node() = default;
-    Node(T val) : data (val) {}
+    Node(T t_Val) : data (t_Val) {}
 };
 
 template<typename T>
 class Queue
 {
 private:
-    Node<T>* m_start;
-    Node<T>* m_end;
+    Node<T>* m_pStart;
+    Node<T>* m_pEnd;
 public:
     Queue();
     ~Queue();
     
-    esp_err_t Enqueue(Node<T> newNode);
+    esp_err_t Enqueue(Node<T> t_Node);
 
     Node<T> Dequeue();
 
-    bool isEmpty();
+    bool IsEmpty();
 };
 
 #include "../Queue.cpp"

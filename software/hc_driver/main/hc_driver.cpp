@@ -17,6 +17,6 @@
 
 extern "C" void app_main(void)
 {
-    Application::start();
+    Application::Start();
     Application::Heartbeat();
 }

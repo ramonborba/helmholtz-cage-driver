@@ -15,35 +15,35 @@
 #include "esp_err.h"
 
 template<typename T>
-Queue<T>::Queue() : m_start ( nullptr ), m_end ( nullptr )
+Queue<T>::Queue() : m_pStart ( nullptr ), m_pEnd ( nullptr )
 {
 }
 
 template<typename T>
 Queue<T>::~Queue()
 {
-    while (!isEmpty())
+    while (!IsEmpty())
     {
-        Node<T>* aux = m_start;
-        m_start = m_start->next;
+        Node<T>* aux = m_pStart;
+        m_pStart = m_pStart->pNext;
         delete aux;
     }
 }
 
 template<typename T>
-esp_err_t Queue<T>::Enqueue(Node<T> newNode) {
+esp_err_t Queue<T>::Enqueue(Node<T> t_Node) {
     Node<T>* auxNode = new Node<T>();
     if (auxNode == nullptr) {
         return ESP_ERR_NO_MEM;
     }
-    *auxNode = newNode;
-    if (m_start == nullptr) {
-        m_start = auxNode;
-        m_end = m_start;
+    *auxNode = t_Node;
+    if (m_pStart == nullptr) {
+        m_pStart = auxNode;
+        m_pEnd = m_pStart;
     }
     else {
-        m_end->next = auxNode;
-        m_end = auxNode;
+        m_pEnd->pNext = auxNode;
+        m_pEnd = auxNode;
     }
 
     return ESP_OK;
@@ -51,14 +51,14 @@ esp_err_t Queue<T>::Enqueue(Node<T> newNode) {
 
 template<typename T>
 Node<T> Queue<T>::Dequeue() {
-    Node<T> auxNode = *m_start;
-    Node<T>* auxPtr = m_start;
-    m_start = m_start->next;
+    Node<T> auxNode = *m_pStart;
+    Node<T>* auxPtr = m_pStart;
+    m_pStart = m_pStart->pNext;
     delete auxPtr;
     return auxNode;
 }
 
 template<typename T>
-bool Queue<T>::isEmpty() {
-    return m_start == nullptr;
+bool Queue<T>::IsEmpty() {
+    return m_pStart == nullptr;
 }

@@ -16,7 +16,7 @@
 
 const char* TAG = "TESTING";
 
-TaskHandle_t taskTestingHandle;
+TaskHandle_t tskTestingTaskHandle;
 
 typedef struct
 {
@@ -24,7 +24,7 @@ typedef struct
 } test;
 
 
-void taskTesting(void *pvParameters) {
+void TestingTask(void *pvParameters) {
     Queue<int> lq;
     Node<int> node (42);
     lq.Enqueue(node);
@@ -40,5 +40,5 @@ void taskTesting(void *pvParameters) {
     t = lq.Dequeue();
     ESP_LOGI(TAG, "Value: %i", t.data);
     
-    vTaskDelete(taskTestingHandle);
+    vTaskDelete(tskTestingTaskHandle);
 }
