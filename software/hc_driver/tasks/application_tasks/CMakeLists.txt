@@ -1,3 +1,3 @@
 idf_component_register(SRCS
                     INCLUDE_DIRS "include"
-                    REQUIRES heartbeat testing_task)
+                    REQUIRES testing_task)
