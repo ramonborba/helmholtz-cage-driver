@@ -4,7 +4,7 @@
 # CMakeLists in this exact order for cmake to work correctly
 cmake_minimum_required(VERSION 3.16)
 
-set(EXTRA_COMPONENT_DIRS app tasks)
+set(EXTRA_COMPONENT_DIRS app tasks mcu_drivers)
 
 set(COMPONENTS main Application)
 
