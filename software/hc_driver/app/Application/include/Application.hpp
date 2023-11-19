@@ -12,24 +12,32 @@
  * \date 15-11-2023
  */
 
-#define HEARTBEAT_LED_PIN       2
-#define HEARTBEAT_PERIOD_MS     500
+#ifndef _APPLICATION_HPP_
+#define _APPLICATION_HPP_
+
+#include <array>
+
+#include "Host.hpp"
 
 class Application
 {
 public:
     static void Start();
 
-    static void Heartbeat();
-
     Application(const Application&) = delete;
     void operator= (const Application&) = delete;
 private:
-    Application() = default;
+    Application();
 
     static Application& GetInstance();
 
     void xCreateTasks();
 
+    static void xTaskHeartbeat(void* pvParameters);
+
+    std::array<Host*, 2> m_Hosts;
+
     static Application m_Singleton;
 };
+
+#endif /* _APPLICATION_HPP_ */

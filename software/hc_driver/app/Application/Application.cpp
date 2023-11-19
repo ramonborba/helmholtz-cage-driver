@@ -19,9 +19,17 @@
 
 #include "Application.hpp"
 #include "application_tasks.hpp"
+#include "HostPC.hpp"
+#include "HostMobile.hpp"
 
-static const char* TAG = "Application Class";
+static const char* TAG = "Application";
 
+#define HEARTBEAT_LED_PIN       2
+#define HEARTBEAT_PERIOD_MS     500
+
+Application::Application() : m_Hosts { &HostPC::GetInstance(), &HostMobile::GetInstance() } {
+
+}
 
 void Application::Start() {
     ESP_LOGI(TAG, "Stating application.");
@@ -29,7 +37,7 @@ void Application::Start() {
     Application::GetInstance().xCreateTasks();
 }
 
-void Application::Heartbeat() {
+void Application::xTaskHeartbeat(void * pvParameters) {
 
     idf::GPIO_Output ledHeartbeat (idf::GPIONum(HEARTBEAT_LED_PIN));
     bool active = false;
@@ -73,6 +81,23 @@ void Application::xCreateTasks() {
     if (err != pdPASS) {
         ESP_LOGE(TAG, "Error creating %s", TASK_TESTING_TASK_NAME);
     }
+
+    for (auto &host : m_Hosts)
+    {
+        const TaskParameters_t tsk = host->GetEventHandlerTaskParams();
+        err = xTaskCreatePinnedToCore(tsk.pvTaskCode,
+                                      tsk.pcName,
+                                      tsk.usStackDepth,
+                                      tsk.pvParameters,
+                                      tsk.uxPriority,
+                                      host->GetEventHandlerTaskHandle(),
+                                      tskNO_AFFINITY
+                                      );
+        if (err != pdPASS) {
+            ESP_LOGE(TAG, "Error creating %s", tsk.pcName);
+        }
+    }
+    
 }
 
 Application Application::m_Singleton;
