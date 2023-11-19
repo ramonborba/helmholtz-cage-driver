@@ -1,8 +1,15 @@
 # VS Code
 .vscode
 
+# Clangd
+.cache
+
 # Build Folders
 build/
+
+# ESP-IDF project files/foldes
+managed_components/
+*.old
 
 # Template .gitignore for C++
 # Prerequisites
