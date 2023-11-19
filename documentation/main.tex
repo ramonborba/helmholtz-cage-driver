@@ -156,9 +156,48 @@ The firmware must fulfillthe following tasks:
   \item Transfer the event log to the hosts.
 \end{itemize}
 
+\subsubsection{Abstraction Layers}
+
 The firmware will be organized in layers with different levels of abstraction. The highes layer will be responsible for the application logic and operation, with lower layers being responsible for external devices and basic functions of the microcontroller and its peripherals, astracting the manufacturer's C labraries using C++ classes.
 
+The abstraction layers are divided as follows:
+\begin{itemize}
+  \item Application layer.
+  \item Components layer.
+  \item Device Drivers layer.
+  \item MCU Drivers layes.
+\end{itemize}
+
+The MCU Drivers layer is composed of classes responsible for interfacing with the ESP32's internal peripherals and functionalities.
+In this layer, most of the ESP-IDF's C APIs are encapsulated into C++ classes and, where possible, the ESP-IDF's own C++ APIs are employed.
+
+The Device Drivers layer is composed of classes responsible for implementing drivers for the external devices used in the system, such as current sensors, current sources and real time clock, taking advantage of the abstractions of the internal drivers of the ESP32.
+
+The Components layer is composed of classes responsible for implementing the interface between the application logic and the hardware devices.
+They provide the main functionalities needed by the application.
+
+The Application layer, which is mainly composed of the Application class, is the highes level layes and is responsible for the logic of operation of the embedded controller and creation of the main application task.
+
+\subsubsection{Detailed Description}
+
+In order to the requirements for this application, and following the abstraction layers described above, several C++ classes were designed.
 The class diagram for the embedded firmware is shown in \autoref{fig:emb-class-diagram} of \autoref{app:class-diagrams}.
+
+The Application class represents the application as a hole and deals with the application logic, it is the entry point of the system firmware.
+This class is responsible for creating the main tasks of the system, and integrating the othe component classes to control the system's operation.
+
+The Host, HostPC and HostMobile classes represent the hosts of the system, which will receive the log of events and send commands to de embedded controller.
+The Host class is an abstract class, providing methods for the Application class to interface with all of its hosts.
+The HostPC class inherits from the Host class and represents the host PC, which will be interfaced with via UART.
+The HostMobile class also inherits from the Host class and represents the host PC, which will be interfaced with via WiFi.
+Both hosts will be able to send commands for controlling the current sources individually, as well as request the transmisison of the log of events.
+
+The Queue and Node template classes implemet a queue data structure.
+They are designed to be platform independant, flexible and reuseble to store any type of object as necessary.
+In the embedded controller, the main use for this templated classes is to implmement the log of events.
+
+The Logger and LogData classes represent the system log of events.
+The LogData encapsulates all the information needed in a log entry, while the Logger class manages the storage of this information in a queue, to later be sent to the hosts.
 
 \iffalse
 
