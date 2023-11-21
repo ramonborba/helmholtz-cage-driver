@@ -1,4 +1,5 @@
 # Add subdirectories
+add_subdirectory(libs)
 add_subdirectory(App)
 
 # Add executable target
