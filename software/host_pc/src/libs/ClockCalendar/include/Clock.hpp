@@ -21,6 +21,48 @@ public:
     void readClock(int& t_hr, int& t_min, int& t_sec, bool& t_isPm);
     void advance();
 
+
+    friend bool operator< (Clock& l, Clock&r) {
+        if ((l.m_isPM && r.m_isPM) || (!l.m_isPM && !r.m_isPM)) {
+            if (l.m_hr < r.m_hr) {
+                if (l.m_min < r.m_min){
+                    if (l.m_sec < r.m_sec) {
+                        return true;
+                    }
+                }
+            }
+            else {
+                return false;
+            }
+        }
+        else if (!l.m_isPM && r.m_isPM) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    friend bool operator== (Clock& l, Clock& r) {
+        return (l.m_isPM == r.m_isPM) && (l.m_hr == r.m_hr) && (l.m_min == r.m_min) && (l.m_sec == r.m_sec);
+    }
+
+    friend bool operator> (Clock& l, Clock& r) {
+        return !(l == r) && !(l < r);
+    }
+
+    friend bool operator<= (Clock& l, Clock& r) {
+        return (l == r) || (l < r);
+    }
+
+    friend bool operator>= (Clock& l, Clock& r) {
+        return (l == r) && (l > r);
+    }
+
+    friend bool operator!= (Clock& l, Clock& r) {
+        return !(l == r);
+    }
+
 protected:
     int m_hr;
     int m_min;
