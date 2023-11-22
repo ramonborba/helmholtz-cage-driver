@@ -1,19 +1,37 @@
+/**
+ * \file App.cpp
+ * 
+ * \brief Application class implementataion
+ * 
+ * \author Ramon de Araujo Borba <ramonborba97@gmail.com>
+ * 
+ * \version 0.1
+ * 
+ * \date 20-11-2023
+ */
+
 #include <iostream>
+#include <limits>
+#include <optional>
 
 #include "App.hpp"
-#include "ClockCalendar.hpp"
 
-HostPC HostPC::m_Host;
+Application Application::m_Host;
 
-void HostPC::Start() {
+static void WaitKeyPress() {
+    std::cout << "Press Enter to continue.";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+    std::cin.get();
+}
+
+void Application::Start() {
     bool exit = false;
-    int command = -1;
+    char cmd;
 
-    ClockCalendar clk(21,03,1997,3,30,42,1);
-
-    system("clear");
-    while (!exit)
+    int err = 0;
+    while (!exit && !err)
     {
+        err = system("clear");
         std::cout << "----- Helmholtz Cage Interface -----\n\n";
 
         std::cout << "Available commands:\n\n";
@@ -24,23 +42,23 @@ void HostPC::Start() {
         std::cout << "   5 - List all events\n\n";
         std::cout << "   6 - List events by interval\n\n";
         std::cout << "Command: ";
-        std::cin >> command;
+        std::cin >> cmd;
 
-        switch (command)
+        switch (cmd)
         {
-        case 1:
-            std::cout << clk.Print() << std::endl;
+        case '1':
             break;
 
-        case 0:
+        case '0':
             exit = true;
-            system("clear");
+            err = system("clear");
             continue;
 
         default:
             std::cout << "Invalid commmand.\n\n";
             break;
         }
+        WaitKeyPress();
     }
 
     return;

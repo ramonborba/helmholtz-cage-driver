@@ -1,11 +1,23 @@
+/**
+ * \file App.hpp
+ * 
+ * \brief Application class responsible for implementing the application logic
+ * 
+ * \author Ramon de Araujo Borba <ramonborba97@gmail.com>
+ * 
+ * \version 0.1
+ * 
+ * \date 20-11-2023
+ */
+
 #pragma once
 
-class HostPC
+class Application
 {
 public:
     static void Start();
 private:
-    HostPC()  = default;
+    Application()  = default;
 
-    static HostPC m_Host;
+    static Application m_Host;
 };
