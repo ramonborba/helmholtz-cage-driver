@@ -25,11 +25,13 @@ public:
     friend bool operator< (Clock& l, Clock&r) {
         if ((l.m_isPM && r.m_isPM) || (!l.m_isPM && !r.m_isPM)) {
             if (l.m_hr < r.m_hr) {
-                if (l.m_min < r.m_min){
-                    if (l.m_sec < r.m_sec) {
-                        return true;
-                    }
-                }
+                return true;
+            }
+            else if ((l.m_hr == r.m_hr) && (l.m_min < r.m_min)){
+                return true;
+            }
+            else if ((l.m_min == r.m_min) && (l.m_sec < r.m_sec)) {
+                return true;
             }
             else {
                 return false;

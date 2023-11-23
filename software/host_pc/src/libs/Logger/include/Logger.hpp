@@ -48,6 +48,14 @@ public:
         return out;
     }
 
+    friend bool operator< (LogData& l, ClockCalendar& r) {
+        return l.m_timestamp < r;
+    }
+
+    friend bool operator> (LogData& l, ClockCalendar& r) {
+        return l.m_timestamp > r;
+    }
+
 private:
     uint32_t m_deviceId;
     ClockCalendar m_timestamp;
@@ -63,7 +71,7 @@ public:
     Event RetrieveEvent();
     LogData RetrieveLogData();
     void ListAll();
-    void ListInterval();
+    void ListInterval(ClockCalendar t_inStart, ClockCalendar t_inEnd);
 
     Logger(const Logger&) = delete;
     void operator= (const Logger&) = delete;

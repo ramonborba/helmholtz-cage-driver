@@ -16,8 +16,6 @@
 
 #include "Logger.hpp"
 
-static const char* TAG = "Logger Class";
-
 LogData::LogData(Event t_event) : m_deviceId (21031997), m_timestamp (0,0,0,0,0,0,0), m_event (t_event) {
     time_t now;
     time(&now);
@@ -53,8 +51,8 @@ void Logger::ListAll() {
     m_logQueue.ListAll();
 }
 
-void Logger::ListInterval() {
-
+void Logger::ListInterval(ClockCalendar t_inStart, ClockCalendar t_inEnd) {
+    m_logQueue.ListInterval(t_inStart, t_inEnd);
 }
 
 Logger::Logger() : m_logQueue () {

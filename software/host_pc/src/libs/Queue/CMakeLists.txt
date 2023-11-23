@@ -10,3 +10,5 @@ target_include_directories(Queue
         "include"
 )
 
+# Link dpendencies
+target_link_libraries(Queue INTERFACE ClockCalendar)

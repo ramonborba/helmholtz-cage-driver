@@ -9,6 +9,7 @@ target_link_libraries(App PRIVATE proj_compiler_flags)
 
 # Link dependencies
 target_link_libraries(App
-    PRIVATE
-        ClockCalendar
+    PUBLIC
+        SerialPort
+        Logger
 )

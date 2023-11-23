@@ -10,6 +10,8 @@
  * \date 17-11-2023
  */
 
+#pragma once
+
 #include <string>
 
 #include "Clock.hpp"
@@ -25,7 +27,15 @@ public:
         Clock rclk (r.m_hr, r.m_min, r.m_sec, r.m_isPM);
         Calendar lcal (l.m_day, l.m_month, l.m_year);
         Calendar rcal (r.m_day, r.m_month, r.m_year);
-        return (lcal < rcal) && (lclk < rclk);
+        if (lcal < rcal) {
+            return true;
+        }
+        else if ((lcal == rcal) && (lclk < rclk)) {
+            return true;
+        }
+        else {
+            return false;
+        };
     }
 
     friend bool operator== (ClockCalendar& l, ClockCalendar& r) {

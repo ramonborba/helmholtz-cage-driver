@@ -67,8 +67,19 @@ void Queue<T>::ListAll() {
     Node<T>* view = m_pStart;
     while (view)
     {
-        std::cout << view->data;
+        std::cout << view->data << "\n";
         view = view->pNext;
     }
-    
+}
+
+template<typename T>
+void Queue<T>::ListInterval(ClockCalendar t_inStart, ClockCalendar t_inEnd) {
+    Node<T>* view = m_pStart;
+    while ((view))
+    {
+        if ((view->data > t_inStart) && (view->data < t_inEnd)) {
+            std::cout << view->data << "\n";
+        }
+        view = view->pNext;
+    }
 }

@@ -23,11 +23,13 @@ public:
 
     friend bool operator< (Calendar& l, Calendar&r) {
         if (l.m_year < r.m_year) {
-            if (l.m_month < r.m_month){
-                if (l.m_day < r.m_day) {
-                    return true;
-                }
-            }
+            return true;
+        }
+        else if ((l.m_year == r.m_year) && (l.m_month < r.m_month)){
+            return true;
+        }
+        else if ((l.m_month == r.m_month) && (l.m_day < r.m_day)) {
+            return true;
         }
         else {
             return false;

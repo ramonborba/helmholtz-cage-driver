@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "SerialPort.hpp"
+
 class Application
 {
 public:
@@ -19,5 +21,10 @@ public:
 private:
     Application()  = default;
 
+    static void SerialMonitor();
+
+    static void SendCommand(int axis, int val);
+
     static Application m_Host;
+    static SerialPort m_Serial;
 };
