@@ -199,10 +199,37 @@ In the embedded controller, the main use for this templated classes is to implme
 The Logger and LogData classes represent the system log of events.
 The LogData encapsulates all the information needed in a log entry, while the Logger class manages the storage of this information in a queue, to later be sent to the hosts.
 
-\iffalse
-
 \subsection{Host computer software}
 
+The host computer software was developed in C++ with an object oriented approach.
+
+It was developed using G++13 compiler, with C++23 standard.
+
+WSL was used to develop the software and for now it only supports Linux.
+It is being implemented as platform independant as possible, with portability in mind.
+This way, if it is to be used in a different platform, only a small amount od change will be needed.
+
+\subsubsection{Abstraction Layers}
+
+The host computer software is organized in a similar manner as the embedded firmware, with abstraction layers, except it has less layer since its not dealing directly with hardware.
+
+The abstraction layers are divided as follows:
+\begin{itemize}
+  \item Application layer.
+  \item Libraries layer.
+\end{itemize}
+
+The application layer is where the logic of operation is implemented, being the highest level of abstraction in the software. It's mainly composed of a Application class.
+
+The libraries layer is composed of several classes, organized as differen libraries, that implement specific functionalities used by the Application class to fulfill the requirements for the software.
+
+\iffalse
+
+\subsubsection{Detailed Description}
+
+Class descriptions
+
+Use of overloaded operators, friends, inheritance, template.
 
 \subsection{Smart phone software}
 
@@ -253,5 +280,103 @@ The LogData encapsulates all the information needed in a log entry, while the Lo
   \label{fig:sim-current-source-output-current}
 \end{figure}
 
+
+\section{Test Plan}
+
+\subsection{Required Tools}
+
+To perform the tests described in the next section, the following intruments and software tools are necessary:
+
+\begin{itemize}
+  \item Required software tools:
+  \begin{itemize}
+    \item PC with a Linux OS (Ubuntu preferably)
+    \item ESP-IDF v5.1.2
+    \item g++ 13.1.0
+    \item A terminal emulator (screen or minicom for example)
+  \end{itemize}
+
+  \item Required hardware and instruments:
+  \begin{itemize}
+    \item Voltimeter
+    \item Amperimeter
+    \item USB/UART converter
+    \item ESP32 development board
+  \end{itemize}
+\end{itemize}
+
+\subsection{HostPC Software Tests}
+
+The following tests verify that the host PC software is operating correctly.
+
+\subsubsection{Test 1}
+
+Verify that the host PC software can send commands through a serial port.
+
+\paragraph{Setup}
+\begin{itemize}
+  \item Clone the project's GitHub repository \cite{mygit}
+  \item Compile the host PC software
+  \item Connect the ESP32 to the PC with the appropriate USB cable
+  \item Load the uart\_events example from ESP-IDF onto the ESP32
+\end{itemize}
+
+\paragraph{Steps}
+\begin{itemize}
+  \item Open a terminal window and run the ESP-IDF serial monitor on the ESP32 serial port
+  \item Execute the host PC software configured for the USB/UART converter serial port
+  \item Select option 1 to set the X axis current
+  \item Verify on the ESP32's logs that the correct command was sent
+  \item Select option 2 to set the Y axis current
+  \item Verify on the ESP32's logs that the correct command was sent
+  \item Select option 3 to set the Z axis current
+  \item Verify on the ESP32's logs that the correct command was sent
+  \item Select option 4 to request transmission of the event log from the embedded controller
+  \item Verify on the ESP32's logs that the correct command was sent
+\end{itemize}
+
+\paragraph{Expected Results}
+
+\begin{itemize}
+  \item The correct commands are being sent from the host PC.
+\end{itemize}
+
+\subsection{Embedded Controller Tests}
+
+The following tests verify that the embedded controller is operating correctly.
+
+\subsubsection{Test 1}
+
+Verify that the embedded controller can read commands from serial port.
+
+\paragraph{Setup}
+\begin{itemize}
+  \item Assert that the host PC software tests were executed and the expected results were obtained
+  \item Clone the project's GitHub repository \cite{mygit}
+  \item Compile the host PC software
+  \item Connect the embedded controller to the PC with the appropriate USB cable
+  \item Connect the USB/UART converter to the embedded controller's command serial port and the host PC.
+  \item Compile and load the firmware of the embedded controller using ESP-IDF's tools
+\end{itemize}
+
+\paragraph{Steps}
+\begin{itemize}
+  \item Open a terminal window and run the ESP-IDF serial monitor on the embedded controller's debug serial port
+  \item Execute the host PC software configured for the USB/UART converter serial port
+  \item Select option 1 to set the X axis current
+  \item Verify on the embedded controller's logs that the correct command was received
+  \item Select option 2 to set the Y axis current
+  \item Verify on the embedded controller's logs that the correct command was received
+  \item Select option 3 to set the Z axis current
+  \item Verify on the embedded controller's logs that the correct command was received
+  \item Select option 4 to request transmission of the event log from the embedded controller
+  \item Verify on the embedded controller's logs that the correct command was received
+\end{itemize}
+
+\paragraph{Expected Results}
+
+\begin{itemize}
+  \item The correct commands are being received by the embedded controller.
+\end{itemize}
 
 \end{document}
