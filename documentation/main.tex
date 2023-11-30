@@ -199,10 +199,37 @@ In the embedded controller, the main use for this templated classes is to implme
 The Logger and LogData classes represent the system log of events.
 The LogData encapsulates all the information needed in a log entry, while the Logger class manages the storage of this information in a queue, to later be sent to the hosts.
 
-\iffalse
-
 \subsection{Host computer software}
 
+The host computer software was developed in C++ with an object oriented approach.
+
+It was developed using G++13 compiler, with C++23 standard.
+
+WSL was used to develop the software and for now it only supports Linux.
+It is being implemented as platform independant as possible, with portability in mind.
+This way, if it is to be used in a different platform, only a small amount od change will be needed.
+
+\subsubsection{Abstraction Layers}
+
+The host computer software is organized in a similar manner as the embedded firmware, with abstraction layers, except it has less layer since its not dealing directly with hardware.
+
+The abstraction layers are divided as follows:
+\begin{itemize}
+  \item Application layer.
+  \item Libraries layer.
+\end{itemize}
+
+The application layer is where the logic of operation is implemented, being the highest level of abstraction in the software. It's mainly composed of a Application class.
+
+The libraries layer is composed of several classes, organized as differen libraries, that implement specific functionalities used by the Application class to fulfill the requirements for the software.
+
+\iffalse
+
+\subsubsection{Detailed Description}
+
+Class descriptions
+
+Use of overloaded operators, friends, inheritance, template.
 
 \subsection{Smart phone software}
 
