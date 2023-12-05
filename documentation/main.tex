@@ -180,14 +180,15 @@ The Application layer, which is mainly composed of the Application class, is the
 
 \subsubsection{Detailed Description}
 
-In order to the requirements for this application, and following the abstraction layers described above, several C++ classes were designed.
+In order to fulfill the requirements for this application, and following the abstraction layers described above, several C++ classes were designed.
+This section porvides a basic description of each of the main classes responsible for the application logic.
 The class diagram for the embedded firmware is shown in \autoref{fig:emb-class-diagram} of \autoref{app:class-diagrams}.
 
 The Application class represents the application as a hole and deals with the application logic, it is the entry point of the system firmware.
 This class is responsible for creating the main tasks of the system, and integrating the othe component classes to control the system's operation.
 
 The Host, HostPC and HostMobile classes represent the hosts of the system, which will receive the log of events and send commands to de embedded controller.
-The Host class is an abstract class, providing methods for the Application class to interface with all of its hosts.
+The Host class is an abstract class, providing methods for the Application class to interface with all of its hosts through polymorphism and virtual functions.
 The HostPC class inherits from the Host class and represents the host PC, which will be interfaced with via UART.
 The HostMobile class also inherits from the Host class and represents the host PC, which will be interfaced with via WiFi.
 Both hosts will be able to send commands for controlling the current sources individually, as well as request the transmisison of the log of events.
@@ -198,6 +199,8 @@ In the embedded controller, the main use for this templated classes is to implme
 
 The Logger and LogData classes represent the system log of events.
 The LogData encapsulates all the information needed in a log entry, while the Logger class manages the storage of this information in a queue, to later be sent to the hosts.
+
+The ClockCalendar class is responsible for storing the date and time of each entry in the event log, it inherits from both the Clock and the Calendar classes, which are responsible for dealing with time and dalendar dates respectively.
 
 \subsection{Host computer software}
 
@@ -223,19 +226,26 @@ The application layer is where the logic of operation is implemented, being the 
 
 The libraries layer is composed of several classes, organized as differen libraries, that implement specific functionalities used by the Application class to fulfill the requirements for the software.
 
-\iffalse
-
 \subsubsection{Detailed Description}
 
-Class descriptions
+In order to fulfill the requirements for this application, and following the abstraction layers described above, several C++ classes were designed.
+This section porvides a basic description of each of the main classes responsible for the application logic.
 
-Use of overloaded operators, friends, inheritance, template.
+The Application class is te entry point for the program and is responsible for starting the program's threads and sending commands to the embedded controller.
 
-\subsection{Smart phone software}
+The SerialPort class is responsible for managing serial ports and is used to communicate with the embedded system. Here, an exception is thown to signal if the serial port was successfully opened upon construction of the SerialPort object.
+
+Due to C++'s abstractions mechanisms, some of the classes implemented for the embedded controller were re-used for the host computer software, since they were implmented in a platform agnostic manner.
+The Logger, LogData, ClockCalendar, Queue and Node classes were taken from the embedded controller code base, with the only modifications made for adding functionality.
+
+The ability to compare dates throught the ClockCalendar classes was implemented through operator overloading and friends. This functionality was used to compare and select the entries in the event log.
 
 
-\subsection{Integration and test}
+\subsection{Tests}
 
+A test plan was implemented and is present at \autoref{app:test-plan}.
+
+\iffalse
 
 \section{Results}
 
@@ -281,7 +291,7 @@ Use of overloaded operators, friends, inheritance, template.
 \end{figure}
 
 
-\section{Test Plan}
+\section{Test Plan} \label{app:test-plan}
 
 \subsection{Required Tools}
 
