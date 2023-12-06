@@ -19,17 +19,17 @@
 // TODO: Implement event class
 class Event {
 public:
-    const char* print() { return "This is an event"; }
-};
+    Event(int t_data) : m_data { t_data} {}
 
+private:
+    int m_data;
+};
 class LogData
 {
 public:
     LogData(Event t_event);
     
     Event GetEvent() { return m_event; }
-    
-    void printDebug();
 
 private:
     uint32_t m_deviceId;
