@@ -38,7 +38,7 @@ private:
     static TaskHandle_t m_TaskHandle;
     static const TaskParameters_t m_TaskParams;
 
-    uart_port_t m_UartPortNum = UART_NUM_2;
+    static uart_port_t m_UartPortNum;
     int m_RxPin = 16;
     int m_TxPin = 17;
     uart_config_t m_UartConfig {
@@ -48,8 +48,8 @@ private:
         .stop_bits  = UART_STOP_BITS_1,
         .flow_ctrl  = UART_HW_FLOWCTRL_DISABLE
     };
-    QueueHandle_t m_UartEventQueue;
-    idf::UARTPort m_Uart;
+    static QueueHandle_t m_UartEventQueue;
+    static idf::UARTPort m_Uart;
 
 };
 
