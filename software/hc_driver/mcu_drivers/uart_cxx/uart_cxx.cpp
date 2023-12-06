@@ -35,8 +35,9 @@ UARTPort::UARTPort(uart_port_t portnum,
         if (!uart_is_driver_installed(port_num_))
         {
             // Install UART driver
-            uart_driver_install(portnum, BUFFER_SIZE * 2, BUFFER_SIZE * 2, queue_size, uart_queue, 0);
+            ESP_ERROR_CHECK(uart_driver_install(portnum, BUFFER_SIZE * 2, BUFFER_SIZE * 2, queue_size, uart_queue, 0));
             ESP_LOGD(UART_TAG, "Installed UART%d driver", port_num_);
+            ESP_LOGD(UART_TAG, "UART queue handle: %i", (int)uart_queue);
             uart_set_pin(port_num_, 17, 16, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
             
             // Store default configuration in config_
@@ -46,7 +47,11 @@ UARTPort::UARTPort(uart_port_t portnum,
             uart_get_stop_bits(port_num_, &config_.stop_bits);
             uart_get_hw_flow_ctrl(port_num_, &config_.flow_ctrl);
         }
-
+        else
+        {
+            ESP_LOGD(UART_TAG, "Driver alredy installed!");
+        }
+        
     }
 }
 
