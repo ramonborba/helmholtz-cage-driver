@@ -12,11 +12,13 @@
 
 #pragma once
 
+#include <cstddef>
 #include <termios.h>
 
 class SerialPort
 {
 public:
+    SerialPort(const char* t_device);
     SerialPort();
     ~SerialPort();
 
@@ -27,6 +29,8 @@ public:
     int Read(void* t_buf, size_t t_size);
 
 private:
+    void Configure();
+
     int m_port;
     const char* m_device;
     termios m_tty;

@@ -19,12 +19,40 @@
 
 #include "SerialPort.hpp"
 
-#define ERR_CHECK(X) if(X<=0){ throw; }
+SerialPort::SerialPort() : m_port {-1}, m_device{nullptr} {
+}
 
-SerialPort::SerialPort() : m_port {-1} , m_device { "/dev/ttyUSB1" } {
+SerialPort::SerialPort(const char* t_device) : m_port {-1} , m_device { t_device } {
 
-    ERR_CHECK(Open());
+    try {
+        Open();
+    }
+    catch(const char * e) {
+        std::cerr << e << '\n';
+    }
+    
 
+    Configure();
+
+
+    std::cout << "Built SerialPort\n";
+}
+
+SerialPort::~SerialPort() {
+    Close();
+}
+
+int SerialPort::Open() {
+    std::cout << "Opening " << m_device << "\n";
+    m_port = open(m_device, O_RDWR|O_NOCTTY|O_NDELAY);
+    if (m_port <= 0 ) {
+        throw "Failed to open serial port!";
+    }
+    fcntl(m_port, F_SETFL, 0);
+    return m_port;
+}
+
+void SerialPort::Configure() {
     // Get current settings
     tcgetattr(m_port, &m_tty);
 
@@ -84,19 +112,6 @@ SerialPort::SerialPort() : m_port {-1} , m_device { "/dev/ttyUSB1" } {
 
     // --- Save Settings ---
     tcsetattr(m_port, TCSANOW, &m_tty);
-
-    std::cout << "Built SerialPort\n";
-}
-
-SerialPort::~SerialPort() {
-    Close();
-}
-
-int SerialPort::Open() {
-    std::cout << "Opening " << m_device << "\n";
-    m_port = open(m_device, O_RDWR|O_NOCTTY|O_NDELAY);
-    fcntl(m_port, F_SETFL, 0);
-    return m_port;
 }
 
 int SerialPort::Close() {
@@ -105,10 +120,16 @@ int SerialPort::Close() {
 }
 
 int SerialPort::Write(void* t_msg, size_t t_size) {
+    if (m_port <= 0) {
+        std::cerr << "Problem with serial port!";
+    }
     return write(m_port, t_msg, t_size);
 }
 
 int SerialPort::Read(void* t_buf, size_t t_size) {
+    if (m_port <= 0) {
+        std::cerr << "Problem with serial port!";
+    }
     int ret = read(m_port, t_buf, t_size);
     return ret;
 }

@@ -38,6 +38,10 @@ void Logger::Add(Event t_event) {
     m_logQueue.Enqueue(LogData(t_event));
 }
 
+void Logger::Add(LogData t_data) {
+    m_logQueue.Enqueue(t_data);
+}
+
 Event Logger::RetrieveEvent() {
     LogData logData = m_logQueue.Dequeue();
     return logData.GetEvent();

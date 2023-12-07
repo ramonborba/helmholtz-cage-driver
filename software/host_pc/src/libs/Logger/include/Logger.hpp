@@ -23,15 +23,16 @@
 // TODO: Implement event class
 class Event {
 public:
-    Event(int t_data) : m_data { t_data} {}
+    Event(int t_cmd, int t_value) : m_cmd { t_cmd }, m_value { t_value } {}
 
     friend std::ostream& operator<< (std::ostream& out, Event& e) {
-        out << "Event Data: " << e.m_data;
+        out << "Axis: " << e.m_cmd << "\nValue: " << e.m_value << "\n";
         return out;
     }
 
 private:
-    int m_data;
+    int m_cmd;
+    int m_value;
 };
 
 class LogData
@@ -39,7 +40,7 @@ class LogData
 public:
     LogData(Event t_event);
 
-    Event GetEvent() { return m_event; }
+    Event& GetEvent() { return m_event; }
 
     friend std:: ostream& operator<< (std::ostream& out, LogData& log) {
         out << std::format("Device ID: {}\n", log.m_deviceId);
@@ -67,7 +68,8 @@ class Logger
 {
 public:
     static Logger& GetInstance();
-    void Add(Event t_data);
+    void Add(Event t_event);
+    void Add(LogData t_data);
     Event RetrieveEvent();
     LogData RetrieveLogData();
     void ListAll();
