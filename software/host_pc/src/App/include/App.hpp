@@ -19,12 +19,12 @@ class Application
 public:
     static void Start();
 private:
-    Application()  = default;
+    Application();
 
     static void SerialMonitor();
 
     static void SendCommand(int axis, int val);
 
     static Application m_Host;
-    static SerialPort m_Serial;
+    SerialPort m_Serial;
 };

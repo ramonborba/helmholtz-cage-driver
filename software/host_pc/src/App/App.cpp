@@ -24,10 +24,13 @@
 #include "Logger.hpp"
 
 Application Application::m_Host;
-SerialPort Application::m_Serial;
+
+Application::Application() : m_Serial { "/dev/ttyUSB1" } {
+
+}
 
 static void WaitKeyPress() {
-    std::cout << "Press Enter to continue.";
+    std::cout << "\nPress Enter to continue.\n";
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
     std::cin.get();
 }
@@ -36,13 +39,18 @@ void Application::SerialMonitor(){
     int i, nbytes;
     Logger& log = Logger::GetInstance();
 
-    LogData data_buf (Event(0));
+    LogData data_buf (Event(0, 0));
 
-    std::cout << "Starting monitoring task.\n";
+    // std::cout << "Starting monitoring task.\n";
     while(true)
     {
-        nbytes = m_Serial.Read(&data_buf, sizeof(data_buf));
-        usleep(100000);
+        nbytes = m_Host.m_Serial.Read(&data_buf, sizeof(data_buf));
+        if (nbytes > 0) {
+            std::cout << "\n" <<  nbytes << "bytes received\n";
+            std::cout << data_buf << "\n";
+            log.Add(data_buf);
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 
@@ -91,11 +99,11 @@ static ClockCalendar RequestDate() {
 void Application::Start() {
     bool exit = false;
     char cmd;
+    int value = 0;
     
     std::thread monitor (SerialMonitor);
 
     Logger& tl = Logger::GetInstance();
-    LogData test (Event(50));
 
     int err = 0;
     while (!exit && !err)
@@ -118,36 +126,30 @@ void Application::Start() {
         ClockCalendar inStart(0,0,0,0,0,0,0);
         ClockCalendar inEnd(0,0,0,0,0,0,0);
 
-        std::cout << "Test: " << test << "\n";
-
         switch (cmd)
         {
             case '1':
-                SendCommand(0, 10);
+                std::cout << "\nValue to set: ";
+                std::cin >> value;
+                SendCommand(1, value);
                 break;
 
             case '2':
-                SendCommand(0, 10);
+                std::cout << "\nValue to set: ";
+                std::cin >> value;
+                SendCommand(2, value);
                 break;
 
             case '3':
-                SendCommand(0, 10);
+                std::cout << "\nValue to set: ";
+                std::cin >> value;
+                SendCommand(3, value);
                 break;
 
             case '4':
-                m_Serial.Write((void*)"Hi!", 4);
-
-                usleep(1000000);
-
-                nbytes = m_Serial.Read(static_cast<void*>(buf), sizeof(buf));
-                std::cout << std::format("Read {} bytes\n", nbytes);
-
-                for (size_t i = 0; i < nbytes/4; i++) {
-                    std::cout << std::to_string(((int*)buf)[i]) << "\n";
-                    tl.Add(Event(((int*)buf)[i]));
-                    usleep(2000000);
-                }
-                
+                value = 4;
+                m_Host.m_Serial.Write((void*)&value, sizeof(int));
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
                 break;
             
             case '5':
@@ -161,7 +163,6 @@ void Application::Start() {
                 inEnd = RequestDate();
                 std::cout << inStart.Print() << "\n";
                 std::cout << inEnd.Print() << "\n";
-                std::cout << ((test < inStart) ? "True" : "False") << "\n";
                 tl.ListInterval(inStart, inEnd);
                 break;
 
@@ -183,5 +184,5 @@ void Application::Start() {
 
 void Application::SendCommand(int axis, int val) {
     int buf[2] = { axis, val };
-    m_Serial.Write(buf, 2);
+    m_Host.m_Serial.Write(buf, sizeof(int)*2);
 }
