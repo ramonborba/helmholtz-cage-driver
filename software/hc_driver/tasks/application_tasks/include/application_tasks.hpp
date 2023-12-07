@@ -14,5 +14,6 @@
 #define _APPLICATION_TASKS_HPP_
 
 #include "testing_task.hpp"
+#include "command_handler_task.hpp"
 
 #endif /* _APPLICATION_TASKS_HPP_ */

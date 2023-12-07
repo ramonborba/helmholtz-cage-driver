@@ -9,36 +9,18 @@
  * 
  * \date 15-11-2023
  */
+
 #include "testing_task.hpp"
-#include "Queue.hpp"
+#include "freertos/queue.h"
+
+#include "CurrentSource.hpp"
 
 #include "esp_log.h"
 
-const char* TAG = "TESTING";
+static const char* TAG = "TESTING";
 
 TaskHandle_t tskTestingTaskHandle;
 
-typedef struct
-{
-    uint32_t data;
-} test;
-
-
 void TestingTask(void *pvParameters) {
-    Queue<int> lq;
-    Node<int> node (42);
-    lq.Enqueue(node);
-    node.data = 43;
-    lq.Enqueue(node);
-    node.data = 44;
-    lq.Enqueue(node);
-    
-    Node<int> t = lq.Dequeue();
-    ESP_LOGI(TAG, "Value: %i", t.data);
-    t = lq.Dequeue();
-    ESP_LOGI(TAG, "Value: %i", t.data);
-    t = lq.Dequeue();
-    ESP_LOGI(TAG, "Value: %i", t.data);
-    
-    vTaskDelete(tskTestingTaskHandle);
+    vTaskSuspend(tskTestingTaskHandle);
 }

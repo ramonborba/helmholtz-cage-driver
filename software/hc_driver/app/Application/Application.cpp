@@ -26,6 +26,7 @@ static const char* TAG = "Application";
 
 #define HEARTBEAT_LED_PIN       2
 #define HEARTBEAT_PERIOD_MS     500
+static TaskHandle_t tskHeartbeatTaskHandle;
 
 Application::Application() : m_Hosts { &HostPC::GetInstance(), &HostMobile::GetInstance() } {
 
@@ -69,6 +70,7 @@ void Application::xCreateTasks() {
     BaseType_t err;
 
     ESP_LOGI(TAG, "Creating tasks.");
+
     // Create testing task
     err = xTaskCreatePinnedToCore(TestingTask,
                             TASK_TESTING_TASK_NAME,
@@ -82,6 +84,33 @@ void Application::xCreateTasks() {
         ESP_LOGE(TAG, "Error creating %s", TASK_TESTING_TASK_NAME);
     }
 
+    // Create testing task
+    err = xTaskCreatePinnedToCore(CommandHandlerTask,
+                            TASK_COMMAND_HANDLER_TASK_NAME,
+                            TASK_COMMAND_HANDLER_TASK_STACK_SIZE,
+                            nullptr,
+                            TASK_COMMAND_HANDLER_TASK_PRIORITY,
+                            &tskCmdHandlerTaskHandle,
+                            tskNO_AFFINITY
+                            );
+    if (err != pdPASS) {
+        ESP_LOGE(TAG, "Error creating %s", TASK_COMMAND_HANDLER_TASK_NAME);
+    }
+
+    // Create heartbeat task
+    err = xTaskCreatePinnedToCore(xTaskHeartbeat,
+                            "Heartbeat Task",
+                            2048,
+                            nullptr,
+                            0,
+                            &tskHeartbeatTaskHandle,
+                            tskNO_AFFINITY
+                            );
+    if (err != pdPASS) {
+        ESP_LOGE(TAG, "Error creating %s", TASK_TESTING_TASK_NAME);
+    }
+
+    // Create hosts task
     for (auto &host : m_Hosts)
     {
         const TaskParameters_t tsk = host->GetEventHandlerTaskParams();

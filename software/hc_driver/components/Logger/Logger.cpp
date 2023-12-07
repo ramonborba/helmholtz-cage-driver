@@ -16,19 +16,18 @@
 
 #include "esp_log.h"
 
-static const char* TAG = "Logger Class";
+static const char* TAG = "Logger";
 
 LogData::LogData(Event t_event) : m_deviceId (21031997), m_timestamp (0,0,0,0,0,0,0), m_event (t_event) {
     time_t now;
     time(&now);
-    setenv("TZ", "UTC-3", 1);
     tm time;
     localtime_r(&now, &time);
     int hour = time.tm_hour > 12 ? time.tm_hour - 12 : time.tm_hour;
     bool ispm = time.tm_hour > 12;
     m_timestamp.setClock(hour, time.tm_min, time.tm_sec, ispm);
-    m_timestamp.setCalendar(time.tm_mday, time.tm_mon, time.tm_year);
-    ESP_LOGI(TAG, "%i-%i-%i %ih%im%is %s", time.tm_mday, time.tm_mon, time.tm_year, hour, time.tm_min, time.tm_sec, ispm ? "PM":"AM");
+    m_timestamp.setCalendar(time.tm_mday, time.tm_mon+1, time.tm_year+1900);
+    ESP_LOGD(TAG, "%i-%i-%i %ih%im%is %s", time.tm_mday, time.tm_mon, time.tm_year, time.tm_hour, time.tm_min, time.tm_sec, ispm ? "PM":"AM");
 }
 
 Logger& Logger::GetInstance() {
@@ -38,6 +37,10 @@ Logger& Logger::GetInstance() {
 
 void Logger::Add(Event t_data) {
     m_logQueue.Enqueue(LogData(t_data));
+}
+
+void Logger::Add(LogData t_data) {
+    m_logQueue.Enqueue(t_data);
 }
 
 Event Logger::RetrieveEvent() {
@@ -51,14 +54,4 @@ LogData Logger::RetrieveLogData() {
 
 Logger::Logger() : m_logQueue () {
 
-}
-
-void LogData::printDebug() {
-    tm t;
-    bool ispm;
-    m_timestamp.readCalendar(t.tm_mday, t.tm_mon, t.tm_year);
-    m_timestamp.readClock(t.tm_hour, t.tm_min, t.tm_sec, ispm);
-    ESP_LOGI(TAG, "DeviceID: %lu", m_deviceId);
-    ESP_LOGI(TAG, "Temstamp: %i-%i-%i|%ih%im%is%s", t.tm_mday, t.tm_mon, t.tm_year, t.tm_hour, t.tm_min, t.tm_sec, ispm ? "PM":"AM");
-    ESP_LOGI(TAG, "Event: %s", m_event.print());
 }
