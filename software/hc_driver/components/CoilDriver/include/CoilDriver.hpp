@@ -19,7 +19,7 @@
 class CoilDriver
 {
 public:
-    CoilDriver(idf::GPIONum t_SourcePin, idf::I2CNumber t_SenI2CNum, idf::SCL_GPIO t_SenSCL, idf::SDA_GPIO t_SenSDA, idf::Frequency t_SenFreq);
+    CoilDriver(idf::GPIONum t_SourcePin, idf::I2CAddress t_addr);
     ~CoilDriver();
 
     void SetSource(uint32_t t_Value);

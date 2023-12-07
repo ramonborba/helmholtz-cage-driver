@@ -12,6 +12,7 @@
 
 #include "HostPC.hpp"
 #include "Logger.hpp"
+#include "command_handler_task.hpp"
 
 #include "esp_log.h"
 
@@ -41,7 +42,13 @@ HostPC& HostPC::GetInstance() {
 }
 
 void HostPC::SendLog() {
-
+    Logger& log { Logger::GetInstance() };
+    while (!log.IsEmpty())
+    {
+        LogData data { log.RetrieveLogData() };
+        m_Uart.write(&data, sizeof(LogData));
+    }
+    
 }
 
 const TaskParameters_t HostPC::GetEventHandlerTaskParams() {
@@ -57,7 +64,6 @@ void HostPC::xUartEventHandlerTask(void* pvParameters) {
 
     uart_event_t event;
     uint32_t buffer[2] = {0};
-    LogData* msg;
 
     vTaskDelay(1000);
     while (true)
@@ -67,12 +73,10 @@ void HostPC::xUartEventHandlerTask(void* pvParameters) {
             switch (event.type)
             {
             case UART_DATA:
-                msg = new LogData(Event(42));
                 m_Uart.read(buffer, event.size, portMAX_DELAY);
-                ESP_LOGI(TAG, "Received: %s", (char*)buffer);
-                ESP_LOGI(TAG, "Sending msg");
-                m_Uart.write(msg, sizeof(LogData));
-                delete msg;
+                ESP_LOGI(TAG, "Received: %li, %li", buffer[0], buffer[1]);
+                xTaskGenericNotify(tskCmdHandlerTaskHandle, 0, buffer[0], eSetValueWithOverwrite, nullptr);
+                xTaskGenericNotify(tskCmdHandlerTaskHandle, 1, buffer[1], eSetValueWithOverwrite, nullptr);
                 break;
             
             default:

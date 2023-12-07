@@ -19,10 +19,11 @@
 // TODO: Implement event class
 class Event {
 public:
-    Event(int t_data) : m_data { t_data} {}
+    Event(int t_cmd, int t_value) : m_cmd { t_cmd}, m_value { t_value} {}
 
 private:
-    int m_data;
+    int m_cmd;
+    int m_value;
 };
 class LogData
 {
@@ -43,8 +44,10 @@ class Logger
 public:
     static Logger& GetInstance();
     void Add(Event t_data);
+    void Add(LogData t_data);
     Event RetrieveEvent();
     LogData RetrieveLogData();
+    bool IsEmpty() { return m_logQueue.IsEmpty(); };
 
     Logger(const Logger&) = delete;
     void operator= (const Logger&) = delete;

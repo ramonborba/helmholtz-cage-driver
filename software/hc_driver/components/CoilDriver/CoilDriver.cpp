@@ -12,9 +12,9 @@
 
 #include "CoilDriver.hpp"
 
-CoilDriver::CoilDriver(idf::GPIONum t_SourcePin, idf::I2CNumber t_SenI2CNum, idf::SCL_GPIO t_SenSCL, idf::SDA_GPIO t_SenSDA, idf::Frequency t_SenFreq) :
+CoilDriver::CoilDriver(idf::GPIONum t_SourcePin, idf::I2CAddress t_addr) :
     m_Source { t_SourcePin },
-    m_Sensor { t_SenI2CNum, t_SenSCL, t_SenSDA, t_SenFreq } {
+    m_Sensor { t_addr } {
 }
 
 CoilDriver::~CoilDriver()

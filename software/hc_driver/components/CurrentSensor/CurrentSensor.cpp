@@ -12,7 +12,9 @@
 
 #include "CurrentSensor.hpp"
 
-CurrentSensor::CurrentSensor(idf::I2CNumber t_num, idf::SCL_GPIO t_scl, idf::SDA_GPIO t_sda, idf::Frequency t_freq) : m_i2c { t_num, t_scl, t_sda, t_freq } {
+idf::I2CMaster m_i2c { idf::I2CNumber::I2C0(), idf::SCL_GPIO(22), idf::SDA_GPIO(23), idf::Frequency(400000) };
+
+CurrentSensor::CurrentSensor(idf::I2CAddress t_addr) : m_addr { t_addr } {
 }
 
 CurrentSensor::~CurrentSensor()

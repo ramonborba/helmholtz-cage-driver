@@ -84,6 +84,19 @@ void Application::xCreateTasks() {
         ESP_LOGE(TAG, "Error creating %s", TASK_TESTING_TASK_NAME);
     }
 
+    // Create testing task
+    err = xTaskCreatePinnedToCore(CommandHandlerTask,
+                            TASK_COMMAND_HANDLER_TASK_NAME,
+                            TASK_COMMAND_HANDLER_TASK_STACK_SIZE,
+                            nullptr,
+                            TASK_COMMAND_HANDLER_TASK_PRIORITY,
+                            &tskCmdHandlerTaskHandle,
+                            tskNO_AFFINITY
+                            );
+    if (err != pdPASS) {
+        ESP_LOGE(TAG, "Error creating %s", TASK_COMMAND_HANDLER_TASK_NAME);
+    }
+
     // Create heartbeat task
     err = xTaskCreatePinnedToCore(xTaskHeartbeat,
                             "Heartbeat Task",

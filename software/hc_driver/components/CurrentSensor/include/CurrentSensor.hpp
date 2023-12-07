@@ -20,12 +20,13 @@
 class CurrentSensor
 {
 public:
-    CurrentSensor(idf::I2CNumber t_num, idf::SCL_GPIO t_scl,idf::SDA_GPIO t_sda,  idf::Frequency t_freq);
+    CurrentSensor(idf::I2CAddress t_addr);
     ~CurrentSensor();
 
     uint32_t Read();
 private:
-    idf::I2CMaster m_i2c;
+    static idf::I2CMaster m_i2c;
+    idf::I2CAddress m_addr;
 };
 
 #endif /* _CURRENT_SENSOR_HPP_ */
